@@ -1,0 +1,23 @@
+# k8s side configs
+1- create the svc and the ep for the external vault addr to be addressable
+    inside the k8s cluster
+
+2- run the vault helm with the external vault address
+    helm install vault hashicorp/vault \
+        --set "injector.externalVaultAddr=http://external-vault:8200" # external-vault is the name of the  ep we created in the test
+    - this helm chart will deploy some components including "vault" sa we will use it in the vault 
+    - then we will create the token secret for this sa
+
+3- then add the annotations to the required workloads to inject and retrive 
+    the secrets
+
+# vault side configs
+1- enable the k8s auth and configure it with the "vault" sa token 
+2- get the ca.crt with this command: kubectl config view --raw --minify --flatten --output='jsonpath={.clusters[].cluster.certificate-authority-data}' | base64 --decode
+    then we can put this in the tf script with ""-----BEGIN CERTIFICATE-----\nExample\n-----END CERTIFICATE-----" 
+3- get the token with this command: kubectl get secret $VAULT_HELM_SECRET_NAME --output='go-template={{ .data.token }}' | base64 --decode 
+    then use it also with the tf scripts
+4- 
+
+
+kubectl get secret vault- --output='go-template={{ .data.token }}' | base64 --decode 
