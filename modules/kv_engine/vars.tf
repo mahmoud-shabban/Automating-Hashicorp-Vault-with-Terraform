@@ -1,10 +1,10 @@
 variable "devwebapp_path" {
-  type = string
+  type        = string
   description = "the path under the mounted kv engine"
-  default = "devwebapp/config"
+  default     = "devwebapp/config"
 }
 variable "devweb_app_config_data" {
-  type = map(string)
+  type        = map(string)
   description = "the config data needed for the devweb app pods"
   default = {
     "username" = "test"
