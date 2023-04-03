@@ -1,0 +1,7 @@
+*.crt
+*.swp
+*.hcl
+*tfstate*
+test
+.terraform/*
+modules/k8s_auth/Notes
