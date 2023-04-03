@@ -6,15 +6,6 @@ module "kv_engine" {
 }
 
 
-# module "k8s_auth" {
-#   source    = "./modules/k8s_auth"
-#   engine_path = var.engine_path
-#   k8s_host  = var.k8s_host
-#   ca_crt    = var.ca_crt
-#   jwt_token = var.jwt_token
-#   k8s_roles = var.k8s_roles
-# }
-
 module "k8s" {
   source = "./modules/k8s_auth"
 

@@ -11,13 +11,25 @@
 3- then add the annotations to the required workloads to inject and retrive 
     the secrets
 
-# vault side configs
+# vault side configs 
 1- enable the k8s auth and configure it with the "vault" sa token 
 2- get the ca.crt with this command: kubectl config view --raw --minify --flatten --output='jsonpath={.clusters[].cluster.certificate-authority-data}' | base64 --decode
     then we can put this in the tf script with ""-----BEGIN CERTIFICATE-----\nExample\n-----END CERTIFICATE-----" 
-3- get the token with this command: kubectl get secret $VAULT_HELM_SECRET_NAME --output='go-template={{ .data.token }}' | base64 --decode 
+3- get the token with this command: kubectl get secret vault-token --output='go-template={{ .data.token }}' | base64 --decode 
     then use it also with the tf scripts
 4- 
 
 
 kubectl get secret vault- --output='go-template={{ .data.token }}' | base64 --decode 
+
+
+########### how to use the injector #################
+the annotations: 
+        vault.hashicorp.com/role: 'devweb-app'
+        vault.hashicorp.com/namespace: 'terraform_ns'
+        vault.hashicorp.com/auth-path: 'auth/k8s_1' ####### very important to know how to use each annotaion as it may cause problems
+        vault.hashicorp.com/agent-inject-secret-my-creds: 'secret/data/devwebapp/config'
+        vault.hashicorp.com/agent-inject-template-my-creds: |
+          {{- with secret "secret/data/devwebapp/config" -}}
+            postgresql://{{ .Data.data.username }}:{{ .Data.data.password }}@postgres:5432/wizard
+          {{- end -}}
